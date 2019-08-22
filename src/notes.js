@@ -6,7 +6,8 @@ class Notes extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      notes: ''
+      notes: '',
+      getNote: []
     }
   }
 
@@ -18,13 +19,21 @@ saveNotes = () => {
   { notes: this.state.notes },
   { headers: { 'Content-Type': 'application/json' } }
 )
+this.getNotes();
 console.log(response.data);
-
 }
+
  handleChange = (event) => {
     this.setState({notes: event.target.value});
   }
-
+  
+getNotes = () => {
+  const response = axios.get("http://localhost:3001/getnotes")
+  .then(res => {
+    const getNote = res.data;
+    this.setState({ getNote });
+  });
+}
     render() {
         return (
           <div className="form-group">
@@ -50,6 +59,9 @@ console.log(response.data);
             />
             <br /> <br />
             <h3> List of Saved Notes: </h3>
+            <ul>{
+            this.state.getNote.map( note => <li> {note.notes} </li>)
+            }</ul>
           </div>
         );
     }
